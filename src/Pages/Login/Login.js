@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthProvider";
 
 const Login = () => {
+  const { signInUserHandler } = useContext(AuthContext);
+  const [loginError, setLoginError] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
+
   const {
     register,
     formState: { errors },
@@ -10,7 +17,17 @@ const Login = () => {
   } = useForm();
 
   const logInFormSubmitHandler = (user) => {
-    console.log(user);
+    const { email, password } = user;
+
+    signInUserHandler(email, password)
+      .then(({ user }) => {
+        setLoginError("");
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        // console.error(error);
+        setLoginError(error.message);
+      });
   };
   return (
     <div className="min-h-screen flex justify-center items-center my-5">
@@ -53,6 +70,7 @@ const Login = () => {
           {errors.password && (
             <p className="text-red-400 mt-1">{errors.password?.message}</p>
           )}
+          {loginError && <p className="text-red-400 mt-1">{loginError}</p>}
           <label className="label mb-3">
             <span className="label-text">Forget password?</span>
           </label>
