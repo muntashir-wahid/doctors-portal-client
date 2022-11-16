@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../context/AuthProvider";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const { createUserHandler, updateUserHandler } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [signUpError, setSignUpError] = useState("");
 
@@ -28,7 +29,7 @@ const SignUp = () => {
         });
         updateUserHandler(name)
           .then(() => {
-            console.log("User profile updated successfully!");
+            navigate("/");
           })
           .catch((error) => console.error(error));
       })
@@ -121,7 +122,6 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 };
