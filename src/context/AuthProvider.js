@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -14,6 +15,7 @@ const defaultContext = {
   createUserHandler() {},
   updateUserHandler() {},
   signInUserHandler() {},
+  passwordResetHandler() {},
   signOutHandler() {},
 };
 export const AuthContext = createContext(defaultContext);
@@ -34,6 +36,10 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, {
       displayName: displayName,
     });
+  };
+
+  const passwordResetHandler = (email) => {
+    return sendPasswordResetEmail(auth, email);
   };
 
   const signInUserHandler = (email, password) => {
@@ -61,6 +67,7 @@ const AuthProvider = ({ children }) => {
     createUserHandler,
     updateUserHandler,
     signInUserHandler,
+    passwordResetHandler,
     signOutHandler,
   };
 

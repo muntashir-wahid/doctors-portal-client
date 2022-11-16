@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import PasswordResetModal from "../../components/UI/PasswordReset/PasswordResetModal";
 import { AuthContext } from "../../context/AuthProvider";
 
 const Login = () => {
@@ -9,6 +10,8 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
+
+  let userEmail;
 
   const {
     register,
@@ -19,9 +22,10 @@ const Login = () => {
   const logInFormSubmitHandler = (user) => {
     const { email, password } = user;
 
+    setLoginError("");
+
     signInUserHandler(email, password)
       .then(({ user }) => {
-        setLoginError("");
         navigate(from, { replace: true });
       })
       .catch((error) => {
@@ -29,6 +33,11 @@ const Login = () => {
         setLoginError(error.message);
       });
   };
+
+  const forgetPasswordHandler = () => {
+    console.log(userEmail);
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-center my-5">
       <div className="w-96 p-7 shadow-lg rounded-lg">
@@ -71,8 +80,18 @@ const Login = () => {
             <p className="text-red-400 mt-1">{errors.password?.message}</p>
           )}
           {loginError && <p className="text-red-400 mt-1">{loginError}</p>}
-          <label className="label mb-3">
-            <span className="label-text">Forget password?</span>
+          {/* <label className="label mb-3">
+            <span className="label-text">
+              <button
+                onClick={forgetPasswordHandler}
+                className="btn btn-link p-0"
+              >
+                Forget password?
+              </button>
+            </span>
+          </label> */}
+          <label htmlFor="my-modal" className="btn btn-link p-0">
+            Forget Password?
           </label>
           <input
             type="submit"
@@ -95,6 +114,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <PasswordResetModal />
     </div>
   );
 };
