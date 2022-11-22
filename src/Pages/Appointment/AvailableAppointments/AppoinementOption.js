@@ -1,7 +1,7 @@
 import React from "react";
 
 const AppoinementOption = ({ appoinementOption, setTreatment }) => {
-  const { name, slots } = appoinementOption;
+  const { name, slots, price } = appoinementOption;
 
   return (
     <div className="card shadow-xl">
@@ -9,6 +9,9 @@ const AppoinementOption = ({ appoinementOption, setTreatment }) => {
         <h2 className="card-title text-secondary">{name}</h2>
         <p>{slots.length ? slots[0] : "Try another day"}</p>
         <p>{slots.length} spaces available</p>
+        <p>
+          <small>Price:{price}</small>
+        </p>
         <div className="card-actions">
           <label
             onClick={setTreatment.bind(null, appoinementOption)}

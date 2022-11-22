@@ -3,15 +3,20 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PasswordResetModal from "../../components/UI/PasswordReset/PasswordResetModal";
 import { AuthContext } from "../../context/AuthProvider";
+import useGetAccessToken from "../../hooks/useGetAccessToken";
 
 const Login = () => {
   const { signInUserHandler } = useContext(AuthContext);
   const [loginError, setLoginError] = useState("");
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
 
-  let userEmail;
+  const [token] = useGetAccessToken(loggedInUserEmail);
+  if (token) {
+    navigate(from, { replace: true });
+  }
 
   const {
     register,
@@ -26,16 +31,12 @@ const Login = () => {
 
     signInUserHandler(email, password)
       .then(({ user }) => {
-        navigate(from, { replace: true });
+        setLoggedInUserEmail(user.email);
       })
       .catch((error) => {
         // console.error(error);
         setLoginError(error.message);
       });
-  };
-
-  const forgetPasswordHandler = () => {
-    console.log(userEmail);
   };
 
   return (
